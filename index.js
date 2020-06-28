@@ -83,7 +83,7 @@ const main = async () => {
         });
 
         await page.click('a[class="text-muted select-photo-url-btn"]');
-        await delay(7500);
+        await delay(9000);
         const links = await page.$$eval("a.btn-primary", (anchors) => {
           return anchors
             .map((anchor) => anchor.getAttribute("href"))
