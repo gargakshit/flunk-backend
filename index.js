@@ -16,6 +16,10 @@ const main = async () => {
   const browser = await puppeteer.launch({
     headless: true,
     slowMo: 10,
+    defaultViewport: {
+      width: 1920,
+      height: 1080,
+    },
   });
 
   await knex.raw(
