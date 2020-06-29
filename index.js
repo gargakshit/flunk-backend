@@ -15,6 +15,7 @@ dotenv.config();
 const main = async () => {
   const browser = await puppeteer.launch({
     headless: true,
+    slowMo: 10,
   });
 
   await knex.raw(
@@ -75,8 +76,9 @@ const main = async () => {
         d.accept(url.toString());
       });
 
+      await delay(2000);
       await page.click('a[class="text-muted select-photo-url-btn"]');
-      await delay(8000);
+      await delay(7000);
       const links = await page.$$eval("a.btn-primary", (anchors) => {
         return anchors
           .map((anchor) => anchor.getAttribute("href"))
