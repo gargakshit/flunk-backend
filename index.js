@@ -87,13 +87,13 @@ const main = async () => {
           .slice(0, 10);
       });
       await page.screenshot({ path: "example.png" });
-      // await page.close();
+      await page.close();
 
-      // if (links) {
-      //   res.send(links && links[0]);
-      // } else {
-      //   res.status(500).send("Server Error");
-      // }
+      if (links) {
+        res.send(links && links[0]);
+      } else {
+        res.status(500).send("Server Error");
+      }
     }
   });
 
