@@ -14,7 +14,7 @@ dotenv.config();
 
 const main = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     slowMo: 10,
   });
 
