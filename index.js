@@ -8,13 +8,10 @@ const knex = require("knex")({
 const express = require("express");
 const dotenv = require("dotenv");
 const puppeteer = require("puppeteer");
-const Redis = require("ioredis");
 
 dotenv.config();
 
 const main = async () => {
-  const redis = new Redis();
-
   const browser = await puppeteer.launch({
     headless: true,
   });
@@ -69,34 +66,26 @@ const main = async () => {
     if (!url) {
       res.status(400).send("Bad Request");
     } else {
-      const base = Buffer.from(url.toString()).toString("base64");
-      const cache = await redis.get(`flunk:cache:${base}`);
+      const page = await browser.newPage();
+      await page.goto("https://www.remove.bg/");
 
-      if (cache) {
-        res.send(cache);
+      page.on("dialog", async (d) => {
+        d.accept(url.toString());
+      });
+
+      await page.click('a[class="text-muted select-photo-url-btn"]');
+      await delay(9000);
+      const links = await page.$$eval("a.btn-primary", (anchors) => {
+        return anchors
+          .map((anchor) => anchor.getAttribute("href"))
+          .slice(0, 10);
+      });
+      await page.close();
+
+      if (links) {
+        res.send(links && links[0]);
       } else {
-        const page = await browser.newPage();
-        await page.goto("https://www.remove.bg/");
-
-        page.on("dialog", async (d) => {
-          d.accept(url.toString());
-        });
-
-        await page.click('a[class="text-muted select-photo-url-btn"]');
-        await delay(9000);
-        const links = await page.$$eval("a.btn-primary", (anchors) => {
-          return anchors
-            .map((anchor) => anchor.getAttribute("href"))
-            .slice(0, 10);
-        });
-        await page.close();
-
-        if (links) {
-          await redis.set(`flunk:cache:${base}`, links[0]);
-          res.send(links && links[0]);
-        } else {
-          res.status(500).send("Server Error");
-        }
+        res.status(500).send("Server Error");
       }
     }
   });
