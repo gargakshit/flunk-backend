@@ -10,7 +10,7 @@ const dotenv = require("dotenv");
 const puppeteer = require("puppeteer");
 const userAgent = require("user-agents");
 
-dotenv.config();
+!process.env.HEROKU && dotenv.config();
 
 const main = async () => {
   const browser = await puppeteer.launch({
