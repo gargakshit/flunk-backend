@@ -16,6 +16,7 @@ const main = async () => {
   const browser = await puppeteer.launch({
     headless: true,
     slowMo: 10,
+    args: ["--no-sandbox"],
   });
 
   await knex.raw(
