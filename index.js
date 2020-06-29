@@ -10,11 +10,11 @@ const dotenv = require("dotenv");
 const puppeteer = require("puppeteer");
 const userAgent = require("user-agents");
 
-!process.env.HEROKU && dotenv.config();
+dotenv.config();
 
 const main = async () => {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     slowMo: 10,
     args: ["--no-sandbox"],
   });
@@ -70,7 +70,9 @@ const main = async () => {
       res.status(400).send("Bad Request");
     } else {
       const page = await browser.newPage();
-      await page.setUserAgent(userAgent.toString());
+      await page.setUserAgent(
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36"
+      );
       await page.goto("https://www.remove.bg/");
 
       page.on("dialog", async (d) => {
@@ -86,13 +88,13 @@ const main = async () => {
           .slice(0, 10);
       });
       await page.screenshot({ path: "example.png" });
-      await page.close();
+      // await page.close();
 
-      if (links) {
-        res.send(links && links[0]);
-      } else {
-        res.status(500).send("Server Error");
-      }
+      // if (links) {
+      //   res.send(links && links[0]);
+      // } else {
+      //   res.status(500).send("Server Error");
+      // }
     }
   });
 
