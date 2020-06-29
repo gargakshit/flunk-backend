@@ -82,6 +82,7 @@ const main = async () => {
           .map((anchor) => anchor.getAttribute("href"))
           .slice(0, 10);
       });
+      await page.screenshot({ path: "example.png" });
       await page.close();
 
       if (links) {
