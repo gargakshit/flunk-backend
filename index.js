@@ -93,6 +93,8 @@ const main = async () => {
       await page.screenshot({ path: "example.png" });
       await page.close();
 
+      console.log(links);
+
       if (links) {
         res.send(links && links[0]);
       } else {
