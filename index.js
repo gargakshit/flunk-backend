@@ -8,6 +8,7 @@ const knex = require("knex")({
 const express = require("express");
 const dotenv = require("dotenv");
 const puppeteer = require("puppeteer");
+const userAgent = require("user-agents");
 
 dotenv.config();
 
@@ -67,6 +68,7 @@ const main = async () => {
       res.status(400).send("Bad Request");
     } else {
       const page = await browser.newPage();
+      await page.setUserAgent(userAgent.toString());
       await page.goto("https://www.remove.bg/");
 
       page.on("dialog", async (d) => {
@@ -74,7 +76,7 @@ const main = async () => {
       });
 
       await page.click('a[class="text-muted select-photo-url-btn"]');
-      await delay(10000);
+      await delay(8000);
       const links = await page.$$eval("a.btn-primary", (anchors) => {
         return anchors
           .map((anchor) => anchor.getAttribute("href"))
